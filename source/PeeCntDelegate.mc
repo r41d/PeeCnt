@@ -23,8 +23,13 @@ class PeeCntDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }
 
-    // START button: count up on the counter page, toggle 7/30 days elsewhere
-    function onSelect() as Boolean {
+    // START button: count up on the counter page, toggle 7/30 days elsewhere.
+    // Handled as a raw key rather than via onSelect(): a screen tap also
+    // triggers onSelect() first, which would swallow it before onTap().
+    function onKey(evt as WatchUi.KeyEvent) as Boolean {
+        if (evt.getKey() != WatchUi.KEY_ENTER) {
+            return false;
+        }
         if (_view.page == PeeCntView.PAGE_COUNTER) {
             add();
         } else {

@@ -1,6 +1,5 @@
 import Toybox.Application;
 import Toybox.Lang;
-import Toybox.System;
 import Toybox.Time;
 
 // Persistent storage. One Storage entry per day, keyed by the day as a
@@ -76,19 +75,9 @@ module PeeStore {
         }
     }
 
-    // Minutes since midnight -> "07:05" or "7:05a". Values past 24:00 wrap.
+    // Minutes since midnight -> "07:05" (always 24h). Values past 24:00 wrap.
     function formatTime(minutes as Number) as String {
         minutes = minutes % 1440;
-        var h = minutes / 60;
-        var m = minutes % 60;
-        if (System.getDeviceSettings().is24Hour) {
-            return h.format("%02d") + ":" + m.format("%02d");
-        }
-        var suffix = h < 12 ? "a" : "p";
-        h = h % 12;
-        if (h == 0) {
-            h = 12;
-        }
-        return h.format("%d") + ":" + m.format("%02d") + suffix;
+        return (minutes / 60).format("%02d") + ":" + (minutes % 60).format("%02d");
     }
 }
