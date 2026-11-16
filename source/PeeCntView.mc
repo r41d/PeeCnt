@@ -53,7 +53,7 @@ class PeeCntView extends WatchUi.View {
         var w = dc.getWidth();
         var h = dc.getHeight();
         var center = Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER;
-        var list = PeeStore.today(PeeStore.load());
+        var list = PeeStore.today();
         var n = list.size();
 
         drawTitle(dc, "Today");

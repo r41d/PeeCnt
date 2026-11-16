@@ -10,7 +10,7 @@ class PeeCntGlanceView extends WatchUi.GlanceView {
     }
 
     function onUpdate(dc as Dc) as Void {
-        var list = PeeStore.today(PeeStore.load());
+        var list = PeeStore.today();
         var n = list.size();
         var line = n.format("%d") + " today";
         if (n > 0) {

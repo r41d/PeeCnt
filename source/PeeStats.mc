@@ -13,9 +13,11 @@ class PeeStats {
     var avgLast as Number = 0;
 
     function initialize(range as Number) {
-        var days = PeeStore.load();
-        // Walk back from noon so DST shifts can't skip or repeat a day.
-        var noon = Time.today().add(new Time.Duration(43200));
+        // Noon of the current (04:00-based) day; walking back from noon
+        // means DST shifts can't skip or repeat a day.
+        var now = PeeStore.logicalNow();
+        var nowInfo = Time.Gregorian.info(now, Time.FORMAT_SHORT);
+        var noon = now.add(new Time.Duration((720 - nowInfo.hour * 60 - nowInfo.min) * 60));
         var total = 0;
         var sumFirst = 0;
         var sumLast = 0;
@@ -25,16 +27,13 @@ class PeeStats {
             var info = Time.Gregorian.info(moment, Time.FORMAT_SHORT);
             weekdays.add(info.day_of_week as Number);
 
-            var list = days[PeeStore.dayId(moment)];
-            var n = 0;
-            if (list instanceof Array) {
-                n = list.size();
-                if (n > 0) {
-                    loggedDays++;
-                    total += n;
-                    sumFirst += list[0] as Number;
-                    sumLast += list[n - 1] as Number;
-                }
+            var list = PeeStore.get(PeeStore.dayId(moment));
+            var n = list.size();
+            if (n > 0) {
+                loggedDays++;
+                total += n;
+                sumFirst += list[0];
+                sumLast += list[n - 1];
             }
             counts.add(n);
             if (n > maxCount) {
